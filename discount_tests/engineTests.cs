@@ -1,11 +1,20 @@
 using acme_discount_engine.Discounts;
 using AcmeSharedModels;
+using NUnit.Framework;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace discount_tests
 {
     [TestClass]
     public class DiscountEngineTest
     {
+        public IClock TestClock = new StubClock();
+
+        [SetUp]
+        public void Setup()
+        {
+        }
+
         [TestMethod]
         public void BulkDiscountTest()
         {
