@@ -42,6 +42,11 @@ namespace acme_discount_engine.Discounts
             return Math.Round(finalTotal, 2);
         }
 
+        private bool isNonPerishableItemEligibleForGeneralDiscount(Item item)
+        {
+            return !NoDiscount.Contains(item.Name);
+        }
+
         private void applyGeneralDiscount(Item item)
         {
             int daysUntilDate = (item.Date - DateTime.Today).Days;
@@ -60,11 +65,6 @@ namespace acme_discount_engine.Discounts
             {
                 applyDiscountForNonPerishable(item, daysUntilDate);
             }
-        }
-
-        private bool isNonPerishableItemEligibleForGeneralDiscount(Item item)
-        {
-            return !NoDiscount.Contains(item.Name);
         }
 
         private void applyDiscountForPerishable(Item item)

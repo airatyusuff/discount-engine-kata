@@ -16,6 +16,7 @@ namespace AcmeSharedModels
 
         public Checkout(List<Item> items) {
             BasketItems = items;
+            currentItem = items[0];
         }
 
         public double CalculateBasketTotal()
@@ -34,8 +35,8 @@ namespace AcmeSharedModels
 
         public void ProcessTwoForOneDeals(List<string> dealsList)
         {
-            initiateBasketProcessing();
-            for (int i = 1; i < BasketItems.Count; i++)
+            currentItemCount = 0;
+            for (int i = 0; i < BasketItems.Count; i++)
             {
                 if (isItemDifferentFromCurrentItem(i))
                 {
@@ -53,8 +54,8 @@ namespace AcmeSharedModels
 
         public void ProcessBulkDiscounts(List<string> dealsList)
         {
-            initiateBasketProcessing();
-            for (int i = 1; i < BasketItems.Count; i++)
+            currentItemCount = 0;
+            for (int i = 0; i < BasketItems.Count; i++)
             {
                 if (isItemDifferentFromCurrentItem(i))
                 {
@@ -76,12 +77,6 @@ namespace AcmeSharedModels
         public bool IsBasketEligibleForLoyaltyDiscount(bool hasLoyaltyCard)
         {
             return hasLoyaltyCard && basketTotal >= 50.00;
-        }
-
-        private void initiateBasketProcessing()
-        {
-            currentItem = BasketItems[0];
-            currentItemCount = 1;
         }
 
         private bool isItemDifferentFromCurrentItem(int itemIdex)
