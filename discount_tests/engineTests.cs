@@ -8,7 +8,7 @@ namespace discount_tests
     [TestClass]
     public class DiscountEngineTest
     {
-        public IClock TestClock = new StubClock();
+        public DateTime TestTime = new StubClock().GetCurrentTime();
 
         [SetUp]
         public void Setup()
@@ -20,16 +20,16 @@ namespace discount_tests
         {
             var items = new List<Item>
         {
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1))
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime)
         };
 
             var discountEngine = new DiscountEngine
@@ -46,9 +46,9 @@ namespace discount_tests
         {
             var items = new List<Item>
         {
-            new Item("Freddo", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Freddo", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Freddo", 5.00, false, new DateTime(2200, 5, 1))
+            new Item("Freddo", 5.00, false, TestTime),
+            new Item("Freddo", 5.00, false, TestTime),
+            new Item("Freddo", 5.00, false, TestTime)
         };
 
             var discountEngine = new DiscountEngine
@@ -65,10 +65,10 @@ namespace discount_tests
         {
             var items = new List<Item>
         {
-            new Item("Thing", 20.00, false, new DateTime(2200, 5, 1)),
-            new Item("Other Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 20.00, false, new DateTime(2200, 5, 1)),
-            new Item("Something", 5.00, false, new DateTime(2200, 5, 1))
+            new Item("Thing", 20.00, false, TestTime),
+            new Item("Other Thing", 5.00, false, TestTime),
+            new Item("Thing", 20.00, false, TestTime),
+            new Item("Something", 5.00, false, TestTime)
         };
 
             var discountEngine = new DiscountEngine
@@ -238,19 +238,19 @@ namespace discount_tests
             new Item("Thing", 10.00, true, DateTime.Now),
             new Item("T-Shirt", 10.00, false, DateTime.Now.AddDays(10)),
             new Item("Thing4", 10.00, false, DateTime.Now.AddDays(-1)),
-            new Item("Freddo", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Freddo", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Freddo", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
+            new Item("Freddo", 5.00, false, TestTime),
+            new Item("Freddo", 5.00, false, TestTime),
+            new Item("Freddo", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
         };
 
             var discountEngine = new DiscountEngine
@@ -273,19 +273,19 @@ namespace discount_tests
             new Item("Thing", 10.00, true, DateTime.Now),
             new Item("T-Shirt", 10.00, false, DateTime.Now.AddDays(10)),
             new Item("Thing4", 10.00, false, DateTime.Now.AddDays(-1)),
-            new Item("Freddo", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Freddo", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Freddo", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
-            new Item("Thing", 5.00, false, new DateTime(2200, 5, 1)),
+            new Item("Freddo", 5.00, false, TestTime),
+            new Item("Freddo", 5.00, false, TestTime),
+            new Item("Freddo", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
+            new Item("Thing", 5.00, false, TestTime),
         };
 
             var discountEngine = new DiscountEngine
