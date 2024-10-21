@@ -18,65 +18,23 @@ namespace acme_discount_engine.Discounts
         public double ApplyDiscounts(List<Item> items)
         {
             Checkout checkout = new Checkout(items);
-
             checkout.SortItemsInBasketForCheckout();
-            checkout.StartCheckoutProcess();
 
-            string currentItem = checkout.currentItem.Name;
-            int itemCount = checkout.currentItemCount;
             List<Item> basketItems = checkout.BasketItems;
 
             checkout.ProcessTwoForOneDeals(TwoForOneList);
 
-            // process general discounts
             foreach (var item in basketItems)
             {
+                applyGeneralDiscount(item);
                 checkout.UpdateTotal(item.Price);
-                int daysUntilDate = (item.Date - DateTime.Today).Days;
-                if(item.IsPastDueDate())
-                {
-                    daysUntilDate = -1;
-                }
-
-                if (isPerishableItemEligibleForDiscount(item, daysUntilDate))
-                {
-                    applyDiscountForPerishable(item);
-                    continue;
-                }
-
-                if (isNonPerishableItemEligibleForDiscount(item))
-                {
-                    applyDiscountForNonPerishable(item, daysUntilDate);
-                    
-                }
             }
 
-            currentItem = string.Empty;
-            itemCount = 0;
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (items[i].Name != currentItem)
-                {
-                    currentItem = items[i].Name;
-                    itemCount = 1;
-                }
-                else
-                {
-                    itemCount++;
-                    if (itemCount == 10 && !TwoForOneList.Contains(items[i].Name) && items[i].Price >= 5.00)
-                    {
-                        for (int j = 0; j < 10; j++)
-                        {
-                            items[i - j].Price -= items[i - j].Price * 0.02;
-                        }
-                        itemCount = 0;
-                    }
-                }
-            }
+            checkout.ProcessBulkDiscounts(TwoForOneList);
+            
+            double finalTotal = checkout.CalculateBasketTotal();
 
-            double finalTotal = items.Sum(item => item.Price);
-
-            if (LoyaltyCard && checkout.basketTotal >= 50.00)
+            if (checkout.IsBasketEligibleForLoyaltyDiscount(LoyaltyCard))
             {
                 finalTotal -= finalTotal * 0.02;
             }
@@ -84,12 +42,33 @@ namespace acme_discount_engine.Discounts
             return Math.Round(finalTotal, 2);
         }
 
-        private bool isPerishableItemEligibleForDiscount(Item item, int daysUntil)
+        private void applyGeneralDiscount(Item item)
+        {
+            int daysUntilDate = (item.Date - DateTime.Today).Days;
+            if (item.IsPastDueDate())
+            {
+                daysUntilDate = -1;
+            }
+
+            if (isPerishableItemEligibleForGeneralDiscount(item, daysUntilDate))
+            {
+                applyDiscountForPerishable(item);
+                return;
+            }
+
+            if (isNonPerishableItemEligibleForGeneralDiscount(item))
+            {
+                applyDiscountForNonPerishable(item, daysUntilDate);
+
+            }
+        }
+
+        private bool isPerishableItemEligibleForGeneralDiscount(Item item, int daysUntil)
         {
             return item.IsPerishable && daysUntil == 0;
         }
 
-        private bool isNonPerishableItemEligibleForDiscount(Item item)
+        private bool isNonPerishableItemEligibleForGeneralDiscount(Item item)
         {
             return !NoDiscount.Contains(item.Name);
         }
