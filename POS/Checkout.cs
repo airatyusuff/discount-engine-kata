@@ -110,10 +110,4 @@ namespace AcmeSharedModels
             currentItemCount = 0;
         }
     }
-
-    public struct BasketItem
-    {
-        public string Name;
-        public int count;
-    }
 }

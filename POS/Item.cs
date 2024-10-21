@@ -30,5 +30,9 @@ namespace AcmeSharedModels
         {
             return DateTime.Today > Date;
         }
+        public bool IsPerishableAndEligibleForGeneralDiscount(int daysUntil)
+        {
+            return IsPerishable && daysUntil == 0;
+        }
     }
 }

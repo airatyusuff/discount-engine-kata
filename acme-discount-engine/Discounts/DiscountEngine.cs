@@ -50,7 +50,7 @@ namespace acme_discount_engine.Discounts
                 daysUntilDate = -1;
             }
 
-            if (isPerishableItemEligibleForGeneralDiscount(item, daysUntilDate))
+            if (item.IsPerishableAndEligibleForGeneralDiscount(daysUntilDate))
             {
                 applyDiscountForPerishable(item);
                 return;
@@ -59,13 +59,7 @@ namespace acme_discount_engine.Discounts
             if (isNonPerishableItemEligibleForGeneralDiscount(item))
             {
                 applyDiscountForNonPerishable(item, daysUntilDate);
-
             }
-        }
-
-        private bool isPerishableItemEligibleForGeneralDiscount(Item item, int daysUntil)
-        {
-            return item.IsPerishable && daysUntil == 0;
         }
 
         private bool isNonPerishableItemEligibleForGeneralDiscount(Item item)
