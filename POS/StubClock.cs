@@ -10,6 +10,11 @@ namespace AcmeSharedModels
     {
         public DateTime GetCurrentTime()
         {
+            return new DateTime(2200, 5, 1); // still need to update for HH MM SS
+        }
+
+        public DateTime GetToday()
+        {
             return new DateTime(2200, 5, 1);
         }
     }

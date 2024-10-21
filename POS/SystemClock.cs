@@ -12,5 +12,10 @@ namespace AcmeSharedModels
         {
             return DateTime.Now;
         }
+
+        public DateTime GetToday()
+        {
+            return DateTime.Today;
+        }
     }
 }

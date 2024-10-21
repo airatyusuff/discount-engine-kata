@@ -9,5 +9,7 @@ namespace AcmeSharedModels
     public interface IClock
     {
         public DateTime GetCurrentTime();
+
+        public DateTime GetToday();
     }
 }
