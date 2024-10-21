@@ -25,5 +25,10 @@ namespace AcmeSharedModels
         {
             return this.Name.CompareTo(other.Name);
         }
+
+        public bool IsPastDueDate()
+        {
+            return DateTime.Today > Date;
+        }
     }
 }

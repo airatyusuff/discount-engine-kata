@@ -17,63 +17,37 @@ namespace acme_discount_engine.Discounts
 
         public double ApplyDiscounts(List<Item> items)
         {
-            Basket basket = new Basket(items);
+            Checkout checkout = new Checkout(items);
 
-            basket.SortItemsInBasketForCheckout();
-            basket.StartCheckoutProcess();
+            checkout.SortItemsInBasketForCheckout();
+            checkout.StartCheckoutProcess();
 
-            string currentItem = basket.currentItemName;
-            int itemCount = basket.currentItemCount;
-            List<Item> basketItems = basket.Items;
+            string currentItem = checkout.currentItem.Name;
+            int itemCount = checkout.currentItemCount;
+            List<Item> basketItems = checkout.BasketItems;
 
-            basket.ProcessTwoForOneDeals(TwoForOneList);
+            checkout.ProcessTwoForOneDeals(TwoForOneList);
 
-            double itemTotal = 0.00;
+            // process general discounts
             foreach (var item in basketItems)
             {
-                itemTotal += item.Price;
+                checkout.UpdateTotal(item.Price);
                 int daysUntilDate = (item.Date - DateTime.Today).Days;
-                if(DateTime.Today > item.Date) { daysUntilDate = -1; }
-
-                if (!item.IsPerishable)
+                if(item.IsPastDueDate())
                 {
-                    if (!NoDiscount.Contains(item.Name))
-                    {
-                        if (daysUntilDate >= 6 && daysUntilDate <= 10)
-                        {
-                            item.Price -= item.Price * 0.05;
-                        }
-                        else if (daysUntilDate >= 0 && daysUntilDate <= 5)
-                        {
-                            item.Price -= item.Price * 0.10;
-                        }
-                        else if (daysUntilDate < 0)
-                        {
-                            item.Price -= item.Price * 0.20;
-                        }
-                    }
+                    daysUntilDate = -1;
                 }
-                else
+
+                if (isPerishableItemEligibleForDiscount(item, daysUntilDate))
                 {
-                    if (daysUntilDate == 0)
-                    {
-                        if (Time.Hour >= 0 && Time.Hour < 12)
-                        {
-                            item.Price -= item.Price * 0.05;
-                        }
-                        else if (Time.Hour >= 12 && Time.Hour < 16)
-                        {
-                            item.Price -= item.Price * 0.10;
-                        }
-                        else if (Time.Hour >= 16 && Time.Hour < 18)
-                        {
-                            item.Price -= item.Price * 0.15;
-                        }
-                        else if (Time.Hour >= 18)
-                        {
-                            item.Price -= item.Price * (!item.Name.Contains("(Meat)") ? 0.25 : 0.15);
-                        }
-                    }
+                    applyDiscountForPerishable(item);
+                    continue;
+                }
+
+                if (isNonPerishableItemEligibleForDiscount(item))
+                {
+                    applyDiscountForNonPerishable(item, daysUntilDate);
+                    
                 }
             }
 
@@ -102,13 +76,60 @@ namespace acme_discount_engine.Discounts
 
             double finalTotal = items.Sum(item => item.Price);
 
-            if (LoyaltyCard && itemTotal >= 50.00)
+            if (LoyaltyCard && checkout.basketTotal >= 50.00)
             {
                 finalTotal -= finalTotal * 0.02;
             }
 
             return Math.Round(finalTotal, 2);
         }
+
+        private bool isPerishableItemEligibleForDiscount(Item item, int daysUntil)
+        {
+            return item.IsPerishable && daysUntil == 0;
+        }
+
+        private bool isNonPerishableItemEligibleForDiscount(Item item)
+        {
+            return !NoDiscount.Contains(item.Name);
+        }
+
+        private void applyDiscountForPerishable(Item item)
+        {
+            if (Time.Hour >= 0 && Time.Hour < 12)
+            {
+                item.Price -= item.Price * 0.05;
+            }
+            else if (Time.Hour >= 12 && Time.Hour < 16)
+            {
+                item.Price -= item.Price * 0.10;
+            }
+            else if (Time.Hour >= 16 && Time.Hour < 18)
+            {
+                item.Price -= item.Price * 0.15;
+            }
+            else if (Time.Hour >= 18)
+            {
+                item.Price -= item.Price * (!item.Name.Contains("(Meat)") ? 0.25 : 0.15);
+            }
+        }
+
+        private void applyDiscountForNonPerishable(Item item, int daysUntil)
+        {
+            if (daysUntil >= 6 && daysUntil <= 10)
+            {
+                item.Price -= item.Price * 0.05;
+            }
+            else if (daysUntil >= 0 && daysUntil <= 5)
+            {
+                item.Price -= item.Price * 0.10;
+            }
+            else if (daysUntil < 0)
+            {
+                item.Price -= item.Price * 0.20;
+            }
+        }
+
     }
 }
 
