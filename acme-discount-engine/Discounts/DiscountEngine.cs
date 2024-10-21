@@ -12,30 +12,36 @@ namespace acme_discount_engine.Discounts
 
         public double ApplyDiscounts(List<Item> items)
         {
-            items.Sort((x, y) => x.Name.CompareTo(y.Name));
-            string currentItem = string.Empty;
-            int itemCount = 0;
+            Basket basket = new Basket(items);
 
-            for (int i = 0; i < items.Count; i++)
+            basket.SortItemsInBasketForCheckout();
+            basket.StartCheckoutProcess();
+
+            string currentItem = basket.currentItemName;
+            int itemCount = basket.currentItemCount;
+            List<Item> basketItems = basket.Items;
+
+            // process special deals: 2-for-1
+            for (int i = 0; i < basketItems.Count; i++)
             {
-                if (items[i].Name != currentItem)
+                if (basketItems[i].Name != currentItem)
                 {
-                    currentItem = items[i].Name;
+                    currentItem = basketItems[i].Name;
                     itemCount = 1;
                 }
                 else
                 {
                     itemCount++;
-                    if (itemCount == 3 && TwoForOneList.Contains(items[i].Name))
+                    if (itemCount == 3 && TwoForOneList.Contains(currentItem))
                     {
-                        items[i].Price = 0.00;
+                        basketItems[i].Price = 0.00;
                         itemCount = 0;
                     }
                 }
             }
 
             double itemTotal = 0.00;
-            foreach (var item in items)
+            foreach (var item in basketItems)
             {
                 itemTotal += item.Price;
                 int daysUntilDate = (item.Date - DateTime.Today).Days;
