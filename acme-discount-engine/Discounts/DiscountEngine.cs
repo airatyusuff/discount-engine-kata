@@ -5,10 +5,15 @@ namespace acme_discount_engine.Discounts
     public class DiscountEngine
     {
         public bool LoyaltyCard { get; set; }
-        public DateTime Time { get; set; } = DateTime.Now;
+        public DateTime Time { get; set; }
 
         private List<string> TwoForOneList = new List<string> { "Freddo" };
         private List<string> NoDiscount = new List<string> { "T-Shirt", "Keyboard", "Drill", "Chair" };
+
+        public DiscountEngine()
+        {
+            Time = new SystemClock().GetCurrentTime();
+        }
 
         public double ApplyDiscounts(List<Item> items)
         {
@@ -21,24 +26,7 @@ namespace acme_discount_engine.Discounts
             int itemCount = basket.currentItemCount;
             List<Item> basketItems = basket.Items;
 
-            // process special deals: 2-for-1
-            for (int i = 0; i < basketItems.Count; i++)
-            {
-                if (basketItems[i].Name != currentItem)
-                {
-                    currentItem = basketItems[i].Name;
-                    itemCount = 1;
-                }
-                else
-                {
-                    itemCount++;
-                    if (itemCount == 3 && TwoForOneList.Contains(currentItem))
-                    {
-                        basketItems[i].Price = 0.00;
-                        itemCount = 0;
-                    }
-                }
-            }
+            basket.ProcessTwoForOneDeals(TwoForOneList);
 
             double itemTotal = 0.00;
             foreach (var item in basketItems)

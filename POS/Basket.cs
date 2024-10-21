@@ -27,14 +27,38 @@ namespace AcmeSharedModels
             currentItemCount = 0;
         }
 
-        public void SetCurrentItemCount(int count)
+        public void ProcessTwoForOneDeals(List<string> dealsList)
         {
-            currentItemCount = count;
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (isCurrentItemSingleQuantity(Items[i]))
+                {
+                    processNextItem(Items[i]);
+                    continue;
+                }
+                
+                currentItemCount++;
+                if (isCurrentItemEligibleForTwoForOneDeal(dealsList))
+                {
+                    Items[i].Price = 0.00;
+                    currentItemCount = 0;
+                }
+            }
         }
 
-        public void SetCurrentItemName(string name)
+        private bool isCurrentItemSingleQuantity(Item nextItem)
         {
-            currentItemName = name;
+            return nextItem.Name != currentItemName;
+        }
+        private void processNextItem(Item item)
+        {
+            currentItemName = item.Name;
+            currentItemCount = 1;
+        }
+
+        private bool isCurrentItemEligibleForTwoForOneDeal(List<string> dealList)
+        {
+            return currentItemCount == 3 && dealList.Contains(currentItemName);
         }
     }
 
