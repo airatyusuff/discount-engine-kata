@@ -37,17 +37,16 @@ namespace AcmeSharedModels
             initiateBasketProcessing();
             for (int i = 1; i < BasketItems.Count; i++)
             {
-                if (isCurrentItemSingleQuantity(BasketItems[i]))
+                if (isItemDifferentFromCurrentItem(i))
                 {
-                    proceedToNextItemInBasket(BasketItems[i]);
+                    proceedToNextItemInBasket(i);
                     continue;
                 }
                 
                 currentItemCount++;
                 if (isCurrentItemEligibleForTwoForOneDeal(dealsList))
                 {
-                    BasketItems[i].Price = 0.00;
-                    currentItemCount = 0;
+                    runTwoForOneDiscountOnItem(i);
                 }
             }
         }
@@ -57,39 +56,20 @@ namespace AcmeSharedModels
             initiateBasketProcessing();
             for (int i = 1; i < BasketItems.Count; i++)
             {
-                if (isCurrentItemSingleQuantity(BasketItems[i]))
+                if (isItemDifferentFromCurrentItem(i))
                 {
-                    proceedToNextItemInBasket(BasketItems[i]);
+                    proceedToNextItemInBasket(i);
                     continue;
                 }
                 currentItemCount++;
-                    if (isCurrentItemEligibleForBulkDeal(dealsList))
-                    {
-                        for (int j = 0; j < 10; j++)
-                        {
-                        BasketItems[i - j].Price -= BasketItems[i - j].Price * 0.02;
-                        }
-                        currentItemCount = 0;
-                    }
-            }
-
-            for (int i = 1; i < BasketItems.Count; i++)
-            {
-                if (isCurrentItemSingleQuantity(BasketItems[i]))
+                if (isCurrentItemEligibleForBulkDeal(dealsList))
                 {
-                    proceedToNextItemInBasket(BasketItems[i]);
-                    continue;
-                }
-
-                currentItemCount++;
-                    if (isCurrentItemEligibleForBulkDeal(dealsList))
+                    for (int j = 0; j < 10; j++)
                     {
-                        for (int j = 0; j < 10; j++)
-                        {
                         BasketItems[i - j].Price -= BasketItems[i - j].Price * 0.02;
-                        }
-                        currentItemCount = 0;
                     }
+                    currentItemCount = 0;
+                }
             }
         }
 
@@ -104,15 +84,11 @@ namespace AcmeSharedModels
             currentItemCount = 1;
         }
 
-        private bool isCurrentItemSingleQuantity(Item nextItem)
+        private bool isItemDifferentFromCurrentItem(int itemIdex)
         {
-            return nextItem.Name != currentItem.Name;
+            return BasketItems[itemIdex].Name != currentItem.Name;
         }
-        private void proceedToNextItemInBasket(Item nextItem)
-        {
-            currentItem = nextItem;
-            currentItemCount = 1;
-        }
+
         private bool isCurrentItemEligibleForTwoForOneDeal(List<string> dealList)
         {
             return currentItemCount == 3 && dealList.Contains(currentItem.Name);
@@ -121,6 +97,17 @@ namespace AcmeSharedModels
         private bool isCurrentItemEligibleForBulkDeal(List<string> dealList)
         {
             return currentItemCount == 10 && !dealList.Contains(currentItem.Name) && currentItem.Price >= 5.00;
+        }
+
+        private void proceedToNextItemInBasket(int itemIndex)
+        {
+            currentItem = BasketItems[itemIndex];
+            currentItemCount = 1;
+        }
+        private void runTwoForOneDiscountOnItem(int itemIndex)
+        {
+            BasketItems[itemIndex].Price = 0.00;
+            currentItemCount = 0;
         }
     }
 
