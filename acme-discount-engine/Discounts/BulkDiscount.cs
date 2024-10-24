@@ -7,22 +7,43 @@ using System.Threading.Tasks;
 
 namespace acme_discount_engine.Discounts
 {
-    public class BulkDiscount : DiscountFactory
+    public class BulkDiscount : IBasketDiscount
     {
-        private List<string> NoDiscountList;
+        private List<string> NoDiscountItems;
 
-        public BulkDiscount(List<string> list)
+        public BulkDiscount(List<string> noDiscountItems)
         {
-            NoDiscountList = list;
+            NoDiscountItems = noDiscountItems;
         }
-        public override bool isBasketEligibleForDeal(Checkout c)
+
+        public void Process(Checkout c)
+        {
+            c.ResetCurrentItemCount();
+            for (int i = 0; i < c.BasketItems.Count; i++)
+            {
+                if (c.isItemDifferentFromCurrentItem(i))
+                {
+                    c.proceedToNextItemInBasket(i);
+                    continue;
+                }
+
+                c.IncrementCurrentItemCount();
+                if (IsItemEligibleForDeal(c))
+                {
+                    RunDiscountOnItem(c, i);
+                }
+
+            }
+        }
+
+        public bool IsItemEligibleForDeal(Checkout c)
         {
             return c.currentItemCount == 10 &&
-                !NoDiscountList.Contains(c.currentItem.Name) &&
-                c.currentItem.Price >= 5.00;
+                c.currentItem.Price >= 5.00 &&
+                !NoDiscountItems.Contains(c.currentItem.Name);
         }
 
-        public override void runDiscountOnBasketItem(Checkout c, int itemIndex)
+        public void RunDiscountOnItem(Checkout c, int itemIndex)
         {
             for (int j = 0; j < 10; j++)
             {

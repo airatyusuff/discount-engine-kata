@@ -9,8 +9,6 @@ namespace acme_discount_engine.Discounts
 {
     public interface IBasketDiscount
     {
-        public bool IsItemEligibleForDeal(Checkout c);
-
-        public void RunDiscountOnItem(Checkout c, int itemIndex);
+        public void Process(Checkout c);
     }
 }

@@ -17,17 +17,16 @@ namespace acme_discount_engine.Discounts
 
         public bool IsBasketEligibleForDeal(Checkout c)
         {
-            Console.WriteLine("total here: " + c.basketTotal + LoyaltyCard);
             return LoyaltyCard && c.basketTotal >= 50.00;
         }
 
         public void ApplyLoyaltyDiscount(Checkout c)
         {
-            Console.WriteLine("gets here");
-            double discount = c.basketTotal * 0.02;
-
-            c.DecreaseBasketTotalBy(discount);
-            Console.WriteLine("final: " + c.basketTotal);
+            if (IsBasketEligibleForDeal(c))
+            {
+                double discount = c.basketTotal * 0.02;
+                c.DecreaseBasketTotalBy(discount);
+            }
         }
     }
 }
