@@ -11,7 +11,7 @@ namespace acme_discount_engine.Discounts
 
         public double ApplyDiscounts(List<Item> items)
         {
-            LoyaltyDiscount scheme = new LoyaltyDiscount(LoyaltyCard);
+            LoyaltyDiscount loyaltyScheme = new LoyaltyDiscount(LoyaltyCard);
             GeneralDiscount generalDiscount = new GeneralDiscount(NoDiscount, Time);
             BulkDiscount bulkDeals = new BulkDiscount(NoDiscount);
             TwoForOneDiscount twoForOneDeals = new TwoForOneDiscount();
@@ -28,7 +28,7 @@ namespace acme_discount_engine.Discounts
 
             checkout.CalculateCheckoutTotal();
 
-            scheme.ApplyLoyaltyDiscount(checkout);
+            loyaltyScheme.Process(checkout);
 
             return Math.Round(checkout.basketTotal, 2);
         }
