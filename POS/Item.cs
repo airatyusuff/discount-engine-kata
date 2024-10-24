@@ -25,14 +25,5 @@ namespace AcmeSharedModels
         {
             return this.Name.CompareTo(other.Name);
         }
-
-        public bool IsPastDueDate()
-        {
-            return DateTime.Today > Date;
-        }
-        public bool IsPerishableAndEligibleForGeneralDiscount(int daysUntil)
-        {
-            return IsPerishable && daysUntil == 0;
-        }
     }
 }
