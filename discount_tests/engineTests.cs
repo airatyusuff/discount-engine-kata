@@ -77,6 +77,7 @@ namespace discount_tests
             };
 
             var result = discountEngine.ApplyDiscounts(items);
+            Console.WriteLine(result);
             Assert.AreEqual(49.00, result, 0.00);
         }
 

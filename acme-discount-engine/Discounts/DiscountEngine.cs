@@ -34,9 +34,17 @@ namespace acme_discount_engine.Discounts
 
             processDiscount(checkout, bulkDeals);
 
-            double finalTotal = applyLoyaltyDiscount(checkout);
+            checkout.CalculateCheckoutTotal();
 
-            return Math.Round(finalTotal, 2);
+            LoyaltyDiscount scheme = new LoyaltyDiscount(LoyaltyCard);
+            Console.WriteLine("here: " + LoyaltyCard);
+            if(scheme.IsBasketEligibleForDeal(checkout))
+            {
+                Console.WriteLine("getss");
+                scheme.ApplyLoyaltyDiscount(checkout);
+            }
+
+            return Math.Round(checkout.basketTotal, 2);
         }
 
         private void processDiscount(Checkout c, DiscountFactory discountFactory)
@@ -59,18 +67,6 @@ namespace acme_discount_engine.Discounts
             }
         }
 
-        private double applyLoyaltyDiscount(Checkout c)
-        {
-            double total = c.BasketItems.Sum(item => item.Price);
-
-            if (IsBasketEligibleForLoyaltyDiscount(c))
-            {
-                total -= total * 0.02;
-            }
-
-            return total;
-        }
-
         private bool isNonPerishableItemEligibleForGeneralDiscount(Item item)
         {
             return !NoDiscount.Contains(item.Name);
@@ -79,12 +75,12 @@ namespace acme_discount_engine.Discounts
         private void applyGeneralDiscount(Item item)
         {
             int daysUntilDate = (item.Date - DateTime.Today).Days;
-            if (item.IsPastDueDate())
+            if (IsPastDueDate(item))
             {
                 daysUntilDate = -1;
             }
 
-            if (item.IsPerishableAndEligibleForGeneralDiscount(daysUntilDate))
+            if (IsPerishableAndEligibleForGeneralDiscount(item, daysUntilDate))
             {
                 applyDiscountForPerishable(item);
                 return;
@@ -94,6 +90,15 @@ namespace acme_discount_engine.Discounts
             {
                 applyDiscountForNonPerishable(item, daysUntilDate);
             }
+        }
+
+        public bool IsPastDueDate(Item item)
+        {
+            return DateTime.Today > item.Date;
+        }
+        public bool IsPerishableAndEligibleForGeneralDiscount(Item item, int daysUntil)
+        {
+            return item.IsPerishable && daysUntil == 0;
         }
 
         private void applyDiscountForPerishable(Item item)

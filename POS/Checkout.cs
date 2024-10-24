@@ -20,6 +20,12 @@ namespace AcmeSharedModels
             currentItem = items[0];
         }
 
+        public double CalculateCheckoutTotal()
+        {
+            basketTotal = BasketItems.Sum(item => item.Price);
+            return basketTotal;
+        }
+
         public void IncrementCurrentItemCount()
         {
             currentItemCount++;
@@ -33,6 +39,11 @@ namespace AcmeSharedModels
         {
             basketTotal += amount;
         }
+        public void DecreaseBasketTotalBy(double amount)
+        {
+            basketTotal -= amount;
+        }
+
         public void SortItemsInBasketForCheckout()
         {
             BasketItems.Sort((firstItem, nextItem) => firstItem.CompareTo(nextItem));
