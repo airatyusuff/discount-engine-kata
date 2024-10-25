@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace acme_discount_engine.Discounts
 {
-    public class TwoForOneDiscount : IBasketDiscount
+    public class TwoForOneDiscount : IDiscount
     {
         private List<string> dealsList = new List<string> { "Freddo" };
 
-        public bool IsItemEligibleForDeal(Checkout basket)
+        private bool IsItemEligibleForDeal(Checkout basket)
         {
             return basket.currentItemCount == 3 && dealsList.Contains(basket.currentItem.Name);
         }
@@ -36,7 +36,7 @@ namespace acme_discount_engine.Discounts
             }
         }
 
-        public void RunDiscountOnItem(Checkout basket, int itemIndex)
+        private void RunDiscountOnItem(Checkout basket, int itemIndex)
         {
             basket.BasketItems[itemIndex].Price = 0.00;
             basket.ResetCurrentItemCount();

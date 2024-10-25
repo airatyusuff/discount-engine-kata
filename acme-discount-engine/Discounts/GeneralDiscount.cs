@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace acme_discount_engine.Discounts
 {
-    public class GeneralDiscount: IBasketDiscount
+    public class GeneralDiscount: IDiscount
     {
         private DateTime Time;
         private List<string> NoDiscountItems;

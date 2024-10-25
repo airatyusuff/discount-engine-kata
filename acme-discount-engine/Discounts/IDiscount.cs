@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace acme_discount_engine.Discounts
 {
-    public interface IBasketDiscount
+    public interface IDiscount
     {
         public void Process(Checkout c);
     }

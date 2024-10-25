@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace acme_discount_engine.Discounts
 {
-    public class LoyaltyDiscount: IBasketDiscount
+    public class LoyaltyDiscount: IDiscount
     {
         private bool LoyaltyCard;
 
@@ -15,7 +15,7 @@ namespace acme_discount_engine.Discounts
             this.LoyaltyCard = LoyaltyCard;
         }
 
-        public bool IsBasketEligibleForDeal(Checkout c)
+        private bool IsBasketEligibleForDeal(Checkout c)
         {
             return LoyaltyCard && c.basketTotal >= 50.00;
         }

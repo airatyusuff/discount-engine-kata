@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace acme_discount_engine.Discounts
 {
-    public class BulkDiscount : IBasketDiscount
+    public class BulkDiscount : IDiscount
     {
         private List<string> NoDiscountItems;
 
@@ -36,14 +36,14 @@ namespace acme_discount_engine.Discounts
             }
         }
 
-        public bool IsItemEligibleForDeal(Checkout c)
+        private bool IsItemEligibleForDeal(Checkout c)
         {
             return c.currentItemCount == 10 &&
                 c.currentItem.Price >= 5.00 &&
                 !NoDiscountItems.Contains(c.currentItem.Name);
         }
 
-        public void RunDiscountOnItem(Checkout c, int itemIndex)
+        private void RunDiscountOnItem(Checkout c, int itemIndex)
         {
             for (int j = 0; j < 10; j++)
             {
